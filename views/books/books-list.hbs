@@ -1,0 +1,13 @@
+<h1>Checkout the list with our awesome books!!</h1>
+{{#each books}}
+  <h3>{{this.title}}</h3>
+  <a href="/books/{{this.id}}">Book details</a>
+  <a href="/books/{{this.id}}/edit">Edit</a>
+
+  <form action="/books/{{this.id}}/delete" method="POST">
+    <button type="submit">Delete</button>
+  </form>
+
+  <br>
+  <hr>
+{{/each}}
