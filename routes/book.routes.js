@@ -24,6 +24,14 @@ router.get("/books", (req, res, next) => {
     });
 });
 
+// CREATE: display form
+router.get("/books/create", (req, res, next) => {
+    res.render("books/book-create");
+});
+
+
+
+// CREATE: process form
 router.post("/books/create", (req, res, next) => {
 
     const newBook = {
@@ -34,13 +42,48 @@ router.post("/books/create", (req, res, next) => {
     };
 
     Book.create(newBook)
-        .then( (newBook) => {
+        .then((newBook) => {
             res.redirect("/books");
         })
-        .catch( e => {
+        .catch(e => {
             console.log("error creating new book", e);
             next(e);
         });
+});
+
+// UPDATE: display form
+router.get('/books/:bookId/edit', (req, res, next) => {
+    const { bookId } = req.params;
+
+    Book.findById(bookId)
+        .then(bookToEdit => {
+            // console.log(bookToEdit);
+            res.render('books/book-edit.hbs', { book: bookToEdit }); // <-- add this line
+        })
+        .catch(error => next(error));
+});
+
+
+
+// UPDATE: process form
+router.post('/books/:bookId/edit', (req, res, next) => {
+    const { bookId } = req.params;
+    const { title, description, author, rating } = req.body;
+
+    Book.findByIdAndUpdate(bookId, { title, description, author, rating }, { new: true })
+        .then(updatedBook => res.redirect(`/books/${updatedBook.id}`)) // go to the details page to see the updates
+        .catch(error => next(error));
+});
+
+
+
+// DELETE: delete book
+router.post('/books/:bookId/delete', (req, res, next) => {
+    const { bookId } = req.params;
+
+    Book.findByIdAndDelete(bookId)
+        .then(() => res.redirect('/books'))
+        .catch(error => next(error));
 });
 
 

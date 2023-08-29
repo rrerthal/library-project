@@ -1,11 +1,20 @@
 const {Schema, model} = require ("mongoose");
 
+
+
+
+
+
+
 const bookSchema = new Schema(
 {
 title: String,
 description: String,
-author: String,
-rating: Number
+rating: Number,
+author: {
+    type: Schema.Types.ObjectId,
+    ref: "Author"
+}
 
 
 
