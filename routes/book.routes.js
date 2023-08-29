@@ -6,29 +6,40 @@ const Book = require('../models/Book.model');
 const Author = require("../models/Author.model");
 //GET /contact-me
 
-// GET/books
-router.get("/books", (req, res, next) => {
 
+// READ: display all books
+router.get("/books", (req, res, next) => {
     Book.find()
-    .populate("author")    
-    .then((booksFromDB) => {
+        .populate("author")
+        .then((booksFromDB) => {
 
             const data = {
                 books: booksFromDB
             }
 
             res.render("books/books-list", data);
-
         })
-        .catch(e => {
-            console.log("error getting list of books from DB", e)
-             next(e);
-    });
-});
+        .catch((e) => {
+            console.log("Error getting list of books from DB", e);
+            next(e);
+        })
+})
+
+
 
 // CREATE: display form
 router.get("/books/create", (req, res, next) => {
-    res.render("books/book-create");
+    Author.find()
+        .then( authorsFromDB => {
+            const data = {
+                authors: authorsFromDB
+            }
+            res.render("books/book-create", data);
+        })
+        .catch((e) => {
+            console.log("Error getting list of authors from DB", e);
+            next(e);
+        });
 });
 
 

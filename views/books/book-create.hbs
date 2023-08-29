@@ -1,5 +1,7 @@
 <h1>Create your new book</h1>
 
+
+
 <form action="/books/create" method="POST">
 
   <label>
@@ -9,11 +11,15 @@
 
   <label>
     Author
-    <input type="text" name="author" >
+    <select name="author">
+    {{#each authors}}
+    <option value={{this._id}}>{{this.name}}</option>
+    {{/each}}
+    </select>
   </label>
 
   <label>
-    Description
+    Description:
     <textarea name="description" cols="30" rows="4" ></textarea>
   </label>
 
