@@ -3,13 +3,15 @@ const express = require('express');
 
 const router = express.Router();
 const Book = require('../models/Book.model');
+const Author = require("../models/Author.model");
 //GET /contact-me
 
 // GET/books
 router.get("/books", (req, res, next) => {
 
     Book.find()
-        .then((booksFromDB) => {
+    .populate("author")    
+    .then((booksFromDB) => {
 
             const data = {
                 books: booksFromDB
@@ -90,7 +92,8 @@ router.post('/books/:bookId/delete', (req, res, next) => {
 
 router.get('/books/:bookId', (req, res, next) => {
     Book.findById(req.params.bookId)
-      .then((bookById) => {
+    .populate("author")  
+    .then((bookById) => {
         res.render('books/book-details', bookById);
       })
       .catch(err => {console.log(`Error: ${err}`)});
