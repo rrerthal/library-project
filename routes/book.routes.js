@@ -1,11 +1,8 @@
-
 const express = require('express');
+const Book = require("../models/Book.model");
+const Author = require("../models/Author.model");
 
 const router = express.Router();
-const Book = require('../models/Book.model');
-const Author = require("../models/Author.model");
-//GET /contact-me
-
 
 // READ: display all books
 router.get("/books", (req, res, next) => {
@@ -64,6 +61,8 @@ router.post("/books/create", (req, res, next) => {
         });
 });
 
+
+
 // UPDATE: display form
 router.get('/books/:bookId/edit', async (req, res, next) => {
     const { bookId } = req.params;
@@ -81,13 +80,6 @@ router.get('/books/:bookId/edit', async (req, res, next) => {
     } catch(error){
         next(error)
     }
-
-    // Book.findById(bookId)
-    //     .then(bookToEdit => {
-    //         // console.log(bookToEdit);
-    //         res.render('books/book-edit.hbs', { book: bookToEdit }); // <-- add this line
-    //     })
-    //     .catch(error => next(error));
 });
 
 
@@ -115,14 +107,20 @@ router.post('/books/:bookId/delete', (req, res, next) => {
 
 
 
-router.get('/books/:bookId', (req, res, next) => {
-    Book.findById(req.params.bookId)
-    .populate("author")  
-    .then((bookById) => {
-        res.render('books/book-details', bookById);
-      })
-      .catch(err => {console.log(`Error: ${err}`)});
-  });
+// READ: display details of one book
+router.get("/books/:bookId", (req, res, next) => {
+    const id = req.params.bookId;
+    Book.findById(id)
+        .populate("author")
+        .then(bookFromDB => {
+            res.render("books/book-details", bookFromDB);
+        })
+        .catch((e) => {
+            console.log("Error getting book details from DB", e);
+            next(e);
+        })
+
+})
 
 
-  module.exports = router;
+module.exports = router;
