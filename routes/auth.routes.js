@@ -86,6 +86,9 @@ router.post('/login', (req, res, next) => {
                 return;
             } else if (bcryptjs.compareSync(password, user.passwordHash)) {
                 //login successful
+
+                req.session.userDetails = user;
+
                 res.render('auth/user-profile', { user: user});
             } else {
                 //login failed
@@ -101,7 +104,12 @@ router.post('/login', (req, res, next) => {
 
 
 router.get("/user-profile", (req, res, next) => {
-    res.render('auth/user-profile')
+
+    const data = {
+        userDetails: req.session.userDetails
+    }
+
+    res.render('auth/user-profile', data)
 })
 
 module.exports = router;
